@@ -1,8 +1,8 @@
 # NEF-JPG Pair Manager
 
-(На русском)[README-ru.md]
+[На русском](README-ru.md)
 
-_A Bash script for automated management of Nikon photo files._
+### _A Bash script for automated management of Nikon photo files._
 
 #### **Key Features**
 
