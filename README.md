@@ -1,20 +1,71 @@
-# nef-jpg
-
-### About
-The camera shoots in NEF + JPG, the filenames are the same, only the extensions are different.
-After filming, JPG are viewed on the computer and unnecessary or defective ones are deleted.
-The script allows you move NEF files without paired JPG to the `unpaired` directory and, after checking, delete them.
-
-### It is specially made so that:
-- It only works in the current directory (without recursive search in subdirectories)
-- Case-sensitive (please note if extensions can be in uppercase)
+# NEF-JPG Pair Manager
 
 
-### Описание
-Камера снимает в NEF + JPG, имена файлов одинаковые, разные только расширения.
-После съемки на компе просматриваются JPG и ненужные или брак удаляются.
-Скрипт позволяет файлы NEF без парных JPG перенести в директорию `unpaired` и, после проверки, удалить их.
+_A Bash script for automated management of Nikon photo files._
 
-### Специально сделано так, что:
-- Работает только в текущей директории (без рекурсивного поиска в поддиректориях)
-- Регистрозависим (учтите, если расширения могут быть в верхнем регистре)
+#### **Key Features**
+
+1.  **File Pair Management**
+    
+    -   Automatically detects  `.nef`  (RAW) files  **missing corresponding  `.jpg`  counterparts**
+        
+    -   Moves orphaned  `.nef`  files to an  `unpaired/`  directory
+        
+2.  **Statistics & Logging**
+    
+    -   Provides detailed file counts:
+        
+        -   Total  `.nef`  and  `.jpg`  files
+            
+        -   Paired (NEF+JPG) and unpaired NEF files
+            
+    -   Logs all moved files with timestamps to  `unpaired.log`
+        
+    -   Saves pre-/post-processing stats in  `file_stats.log`
+        
+3.  **Flexible Options**
+    
+    -   Recursive directory scanning (`-r`)
+        
+    -   Dry-run mode (`--dry-run`) for testing
+        
+    -   Custom log file support (`-l filename`)
+        
+4.  **Error Handling**
+    
+    -   Checks write permissions
+        
+    -   Handles filenames with spaces/special characters
+        
+
+#### **Usage**
+
+    ./script.sh [-r|--recursive] [-d|--dry-run] [-l|--log filename]
+
+**Outputs**:
+
+-   Orphaned  `.nef`  files moved to  `unpaired/`
+    
+-   Detailed console/file reports
+    
+
+**Optimized for**:
+
+-   Nikon photographers managing RAW+JPEG libraries
+    
+-   Identifying "lost" RAW files
+    
+-   Batch cleanup of photo directories
+    
+
+**Requirements**: Bash 4+, standard GNU utilities (`find`, `mv`).
+
+----------
+
+### **Options**
+
+`./unpaired.sh -r|--recursive` - recursive processing (include subdirectories)
+
+`./unpaired.sh -d|--dry-run` - previews changes without any file operations (test)
+
+`./unpaired.sh -l|--log filename` - writing the operation log to the specified file
