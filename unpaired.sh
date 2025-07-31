@@ -5,7 +5,8 @@ set -euo pipefail
 # Параметры
 recursive=false
 dry_run=false
-log_file=""
+log_file="unpaired.log"
+stats_file="file_stats.log"
 
 # Обработка аргументов
 while [[ $# -gt 0 ]]; do
@@ -18,19 +19,36 @@ while [[ $# -gt 0 ]]; do
     shift
 done
 
-# Создание директории unpaired внутри директории с фотками, если её нет, и проверка прав
+# Создание директории и проверка прав
 mkdir -p unpaired
 if [ ! -w unpaired/ ]; then
     echo "Error: Cannot write to 'unpaired/'" >&2
     exit 1
 fi
 
-# Ищем .nef файлы без соответствующих .jpg и переносим найденное в unpaired
+# Функция для подсчёта файлов по типам
+count_files() {
+    echo "=== File statistics before processing ===" > "$stats_file"
+    echo "NEF files: $(find . -maxdepth 1 -type f -name "*.nef" | wc -l)" >> "$stats_file"
+    echo "JPG files: $(find . -maxdepth 1 -type f -name "*.jpg" -o -name "*.JPG" | wc -l)" >> "$stats_file"
+    echo "Paired NEF+JPG: $(find . -maxdepth 1 -type f -name "*.nef" | while read -r f; do [ -f "${f%.*}.jpg" ] || [ -f "${f%.*}.JPG" ] && echo 1; done | wc -l)" >> "$stats_file"
+    echo "Unpaired NEF: $(find . -maxdepth 1 -type f -name "*.nef" | while read -r f; do [ -f "${f%.*}.jpg" ] || [ -f "${f%.*}.JPG" ] || echo 1; done | wc -l)" >> "$stats_file"
+    echo "=====================" >> "$stats_file"
+}
+
+# Собираем статистику до обработки
+count_files
+cat "$stats_file"
+
+# Поиск .nef файлов
 find_cmd="find ."
 $recursive || find_cmd+=" -maxdepth 1"
 find_cmd+=" -type f -name \"*.nef\" -print0"
 
-moved=0
+# Используем временный файл для подсчёта перемещённых файлов
+moved_file=$(mktemp)
+echo 0 > "$moved_file"
+
 eval "$find_cmd" | while IFS= read -r -d '' nef_file; do
     jpg_file="${nef_file%.*}.jpg"
     if [ ! -f "$jpg_file" ] && [ ! -f "${nef_file%.*}.JPG" ]; then
@@ -38,10 +56,20 @@ eval "$find_cmd" | while IFS= read -r -d '' nef_file; do
             echo "[Dry Run] Would move: $nef_file"
         else
             mv "$nef_file" unpaired/
-            [ -n "$log_file" ] && echo "$(date): Moved $nef_file" >> "$log_file"
+            echo "$(date +'%Y-%m-%d %H:%M:%S'): Moved $nef_file" >> "$log_file"
         fi
-        ((moved++))
+        count=$(<"$moved_file")
+        echo $((count + 1)) > "$moved_file"
     fi
 done
 
-echo "Done. Moved $moved file(s) to 'unpaired/'"
+moved=$(<"$moved_file")
+rm "$moved_file"
+
+# Собираем статистику после обработки
+count_files
+
+echo "=== Processing Results ==="
+echo "Moved $moved file(s) to 'unpaired/'"
+echo "=== Current File Stats ==="
+cat "$stats_file"
