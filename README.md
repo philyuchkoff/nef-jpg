@@ -18,9 +18,9 @@ A robust bash script for organizing photo files by moving/copying unpaired RAW f
 ### **Installation**
 
 ```
-git clone https://github.com/yourusername/photo-organizer.git
-cd photo-organizer
-chmod +x organize_photos.sh
+git clone https://github.com/philyuchkoff/nef-jpg.git
+cd nef-jpg
+chmod +x unpaired.sh
 ```
 
 ### **Usage**
@@ -28,31 +28,31 @@ chmod +x organize_photos.sh
 #### Basic Examples
 ```
 # Find and move unpaired RAW files (non-recursive)
-./organize_photos.sh
+./unpaired.sh
 
 # Dry run to see what would be moved
-./organize_photos.sh -dr
+./unpaired.sh -dr
 
 # Recursive search with verbose output
-./organize_photos.sh -rv
+./unpaired.sh -rv
 
 # Copy instead of move, with backup
-./organize_photos.sh -cb
+./unpaired.sh -cb
 ```
 
 #### Advanced Examples
 ```
 # Process only large files (1MB to 50MB)
-./organize_photos.sh --min-size 1M --max-size 50M
+./unpaired.sh --min-size 1M --max-size 50M
 
 # Find and display paired files without moving
-./organize_photos.sh --find-pairs -v
+./unpaired.sh --find-pairs -v
 
 # Move paired files to separate directory
-./organize_photos.sh --move-pairs
+./unpaired.sh --move-pairs
 
 # Custom log file with quiet operation
-./organize_photos.sh -q -l my_photos.log
+./unpaired.sh -q -l my_photos.log
 ```
 ----------
 
