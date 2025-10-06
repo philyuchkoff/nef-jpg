@@ -2,71 +2,111 @@
 
 [На русском](README-ru.md)
 
-### _A Bash script for automated management of Nikon photo files._
+### _Photo Organizer Script - a bash script for automated management of RAW photo files_
 
-#### **Key Features**
+A robust bash script for organizing photo files by moving/copying unpaired RAW files to a separate directory. Perfect for photographers who want to clean up their photo collections.
 
-1.  **File Pair Management**
-    
-    -   Automatically detects  `.nef`  (RAW) files  **missing corresponding  `.jpg`  counterparts**
-        
-    -   Moves orphaned  `.nef`  files to an  `unpaired/`  directory
-        
-2.  **Statistics & Logging**
-    
-    -   Provides detailed file counts:
-        
-        -   Total  `.nef`  and  `.jpg`  files
-            
-        -   Paired (NEF+JPG) and unpaired NEF files
-            
-    -   Logs all moved files with timestamps to  `unpaired.log`
-        
-    -   Saves pre-/post-processing stats in  `file_stats.log`
-        
-3.  **Flexible Options**
-    
-    -   Recursive directory scanning (`-r`)
-        
-    -   Dry-run mode (`--dry-run`) for testing
-        
-    -   Custom log file support (`-l filename`)
-        
-4.  **Error Handling**
-    
-    -   Checks write permissions
-        
-    -   Handles filenames with spaces/special characters
-        
+### **Key Features**
 
-#### **Usage**
+- Multi-format Support: Handles NEF, CR2, ARW, DNG RAW formats and JPG/JPEG counterparts
+- Flexible Operations: Move or copy files, dry-run simulation, backup options
+- Smart Filtering: Filter by file size, recursive directory search
+- Dual Modes: Find unpaired RAW files OR find and process paired files
+- Comprehensive Logging: Detailed logs and statistics with verbose/quiet modes
+- Safety First: Backup options, confirmation prompts, and strict error handling
+        
+### **Installation**
 
-    ./script.sh [-r|--recursive] [-d|--dry-run] [-l|--log filename]
+```
+git clone https://github.com/yourusername/photo-organizer.git
+cd photo-organizer
+chmod +x organize_photos.sh
+```
 
-**Outputs**:
+### **Usage**
 
--   Orphaned  `.nef`  files moved to  `unpaired/`
-    
--   Detailed console/file reports
-    
+#### Basic Examples
+```
+# Find and move unpaired RAW files (non-recursive)
+./organize_photos.sh
 
-**Optimized for**:
+# Dry run to see what would be moved
+./organize_photos.sh -dr
 
--   Nikon photographers managing RAW+JPEG libraries
-    
--   Identifying "lost" RAW files
-    
--   Batch cleanup of photo directories
-    
+# Recursive search with verbose output
+./organize_photos.sh -rv
 
-**Requirements**: Bash 4+, standard GNU utilities (`find`, `mv`).
+# Copy instead of move, with backup
+./organize_photos.sh -cb
+```
 
+#### Advanced Examples
+```
+# Process only large files (1MB to 50MB)
+./organize_photos.sh --min-size 1M --max-size 50M
+
+# Find and display paired files without moving
+./organize_photos.sh --find-pairs -v
+
+# Move paired files to separate directory
+./organize_photos.sh --move-pairs
+
+# Custom log file with quiet operation
+./organize_photos.sh -q -l my_photos.log
+```
 ----------
 
-### **Options**
+### **Command Line Options**
 
-`./unpaired.sh -r|--recursive` - recursive processing (include subdirectories)
+`-r`, `--recursive`	Search subdirectories recursively
 
-`./unpaired.sh -d|--dry-run` - previews changes without any file operations (test)
+`-d`, `--dry-run`	Simulate without moving files
 
-`./unpaired.sh -l|--log filename` - writing the operation log to the specified file
+`-c`, `--copy`	Copy files instead of moving
+
+`-b`, `--backup`	Create backup before moving
+
+`--find-pairs`	Find and show paired files
+
+`--move-pairs`	Move paired files to 'paired/' directory
+
+`--min-size SIZE`	Minimum file size (e.g., 1M, 100K)
+
+`--max-size SIZE`	Maximum file size (e.g., 50M, 1G)
+
+`-v`, `--verbose`	Verbose output
+
+`-q`, `--quiet`	Quiet mode (errors only)
+
+`-l`, `--log FILE`	Custom log file (default: unpaired.log)
+
+`-h`, `--help`	Show help message
+
+### **Supported Formats**
+- RAW Formats: NEF, CR2, ARW, DNG
+- JPEG Formats: JPG, JPEG (case insensitive)
+
+### **Output Files**
+- `unpaired.log` - Operation log with timestamps
+
+- `file_stats.log` - Before/after file statistics
+
+- `unpaired/` - Directory for unpaired RAW files
+
+- `paired/` - Directory for paired files (when using `--move-pairs`)
+
+- `backup/` - Backup directory (when using `--backup`)
+
+### **Safety Features**
+- Dry-run mode: Test operations without affecting files
+- Backup option: Create backups before moving files
+- Confirmation prompts: Confirm destructive operations
+- Size filtering: Process only files within specified size range
+- Error handling: Strict error checking with set -euo pipefail
+
+### **Requirements**
+- Bash 4.0 or newer
+- Standard Unix utilities: find, mv, cp, mkdir, stat
+
+### **License**
+MIT License
