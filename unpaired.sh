@@ -504,6 +504,22 @@ main() {
     log_info "Log file: $log_file" >&4
     log_info "Stats file: $stats_file" >&4
 }
+    # Функция для установки рейтинга фото
+    set_rating() {
+    local photo="$1"
+    local rating="$2"
+    local rating_file="${photo%.*}.rating"
+    
+    if [[ $rating =~ ^[1-5]$ ]]; then
+        echo "$rating" > "$rating_file"
+        log_success "Rating $rating set for $photo"
+    else
+        log_error "Rating must be 1-5"
+    fi
+}
+
+# Пример использования:
+# ./organize.sh --set-rating "photo.jpg" 5
 
 # Запуск основной программы
 main
