@@ -1,5 +1,8 @@
 # NEF-JPG Pair Manager
 
+![GitHub issues](https://img.shields.io/github/issues/philyuchkoff/nef-jpg)
+![GitHub last commit](https://img.shields.io/github/last-commit/philyuchkoff/nef-jpg)
+
 [На русском](README-ru.md)
 
 ### _Photo Organizer Script - a bash script for automated management of RAW photo files_
